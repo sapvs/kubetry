@@ -5,7 +5,7 @@ metadata:
   labels:
     type: front-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: myApp
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx
+          image: nginx:alpine
           resources:
             limits:
               memory: "128Mi"

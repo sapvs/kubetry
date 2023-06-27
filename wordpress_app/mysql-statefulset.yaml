@@ -5,7 +5,7 @@ metadata:
   labels:
     app: mysql
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend-mysql
@@ -41,6 +41,11 @@ spec:
                 secretKeyRef:
                   key: MYSQL_DATABASE
                   name: mysql-secret
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap           
+                  key: MYSQL_RANDOM_ROOT_PASSWORD
           volumeMounts:
             - name: db
               mountPath: /var/lib/mysql
