@@ -1,0 +1,75 @@
+# Deployment : Server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k5y-svr-dep
+  labels:
+    app: k5y-svr
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k5y-svr
+  template:
+    metadata:
+      name: k5y-svr-pod
+      labels:
+        app: k5y-svr
+    spec:
+      containers:
+        - name: svr
+          image: svr:0.1
+          ports:
+            - containerPort: 8080
+
+---
+# Deployment : Client
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k5y-clt-dep
+  labels:
+    app: k5y-clt
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k5y-clt
+  template:
+    metadata:
+      name: k5y-clt-pod
+      labels:
+        app: k5y-clt
+    spec:
+      containers:
+        - name: clt
+          image: clt:0.2
+          env:
+            - name: SVR
+              valueFrom:
+                configMapKeyRef:
+                  name: k5y-config
+                  key: server
+                  optional: true
+---
+# configmap client
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k5y-config
+data:
+  server: k5y-svr-svc
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: k5y-svr-svc
+spec:
+  selector:
+    app: k5y-svr
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
