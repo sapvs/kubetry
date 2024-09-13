@@ -7,7 +7,7 @@ metadata:
     app: k5y-svr
 
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: k5y-svr
@@ -32,7 +32,7 @@ metadata:
   labels:
     app: k5y-clt
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: k5y-clt
@@ -69,7 +69,9 @@ metadata:
 spec:
   selector:
     app: k5y-svr
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+      nodePort: 30000
